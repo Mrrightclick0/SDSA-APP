@@ -31,8 +31,8 @@ def app():
     acol=col2
 
     # Paths to data directories
-    event_data_dir = os.path.join("Stat")
-    shot_data_dir = os.path.join("Stat")
+    event_data_dir = os.path.join("stat")
+    shot_data_dir = os.path.join("stat")
 
     # Function to list files
  def list_files(directory, keyword):
