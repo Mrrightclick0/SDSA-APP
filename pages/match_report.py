@@ -31,7 +31,7 @@ def app():
     acol=col2
 
     # Paths to data directories
-    data_dir = "stat"
+    data_dir = "Stat"
 
 # Function to list files
     def list_files(directory, keyword):
