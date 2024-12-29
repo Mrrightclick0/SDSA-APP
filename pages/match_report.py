@@ -35,8 +35,11 @@ def app():
     shot_data_dir = os.path.join("Stat")
 
     # Function to list files
-    def list_files(directory, keyword):
-        return [f for f in os.listdir(directory) if keyword in f]
+ def list_files(directory, keyword):
+    if not os.path.exists(directory):
+        raise FileNotFoundError(f"Directory '{directory}' does not exist.")
+    return [f for f in os.listdir(directory) if keyword in f]
+
 
     # Extract unique match names from file names
     def extract_match_names(event_files, shot_files):
