@@ -50,6 +50,9 @@ def app():
     
     # Extract match names
     match_names = extract_match_names(event_files, shot_files)
+    print("Event Files:", event_files)
+    print("Shot Files:", shot_files)
+    print("Match Names:", match_names)
 
     # Extract unique teams from event files
     def extract_teams_from_files(event_files, event_data_dir):
