@@ -31,28 +31,24 @@ def app():
     acol=col2
 
     # Paths to data directories
-    data_dir = "Stat"
+    event_data_dir = os.path.join("stat")
+    shot_data_dir = os.path.join("stat")
 
-# Function to list files
+    # Function to list files
     def list_files(directory, keyword):
-        if not os.path.exists(directory):
-            raise FileNotFoundError(f"Directory '{directory}' does not exist.")
         return [f for f in os.listdir(directory) if keyword in f]
-    
+
     # Extract unique match names from file names
     def extract_match_names(event_files, shot_files):
         matches = set(f.split("_EventsData.csv")[0] for f in event_files) & set(f.split("_ShotsData.csv")[0] for f in shot_files)
         return sorted(matches)
-    
+
     # List available CSV files
-    event_files = list_files(data_dir, "_EventsData.csv")
-    shot_files = list_files(data_dir, "_ShotsData.csv")
-    
+    event_files = list_files(event_data_dir, "_EventsData.csv")
+    shot_files = list_files(shot_data_dir, "_ShotsData.csv")
+
     # Extract match names
     match_names = extract_match_names(event_files, shot_files)
-    print("Event Files:", event_files)
-    print("Shot Files:", shot_files)
-    print("Match Names:", match_names)
 
     # Extract unique teams from event files
     def extract_teams_from_files(event_files, event_data_dir):
@@ -64,7 +60,6 @@ def app():
         return sorted(teams)
 
     teams = extract_teams_from_files(event_files, event_data_dir)
-
     # Streamlit Layout
 
     # Sidebar for Team and Match Selection
