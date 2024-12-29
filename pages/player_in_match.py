@@ -32,8 +32,8 @@ def app():
 
     # Paths to data directories
     # Paths to data directories
-    event_data_dir = os.path.join("stat")
-    shot_data_dir = os.path.join("stat")
+    event_data_dir = os.path.join("Stat")
+    shot_data_dir = os.path.join("Stat")
 
     # Function to list files
     def list_files(directory, keyword):
