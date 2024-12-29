@@ -3,7 +3,7 @@ import streamlit as st
 # Welcome page
 st.set_page_config(layout="wide", page_title="Football Analysis Dashboard", page_icon="⚽")
 st.title("Welcome to the SDSA Football Analysis Dashboard")
-logo_path = r"C:\Users\lahd2\OneDrive\Mehdaf\Code\app\logo.png"  # Replace with the actual path to your logo
+logo_path = "assets/logo.png"
 st.image(logo_path, use_container_width =True)
 # Navigation
 st.sidebar.title("Navigation")
