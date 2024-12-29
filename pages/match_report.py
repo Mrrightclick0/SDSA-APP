@@ -13,8 +13,7 @@ from scipy.spatial import ConvexHull
 import streamlit as st
 def app():
     st.title("Match Report")
-    st.write("This is the Match Report page.")
-# Print the modified DataFrame
+    # Print the modified DataFrame
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
 
@@ -32,8 +31,8 @@ def app():
     acol=col2
 
     # Paths to data directories
-    event_data_dir = os.path.join("stat", "events")
-    shot_data_dir = os.path.join("stat", "shots")
+    event_data_dir = os.path.join("stat")
+    shot_data_dir = os.path.join("stat")
 
     # Function to list files
     def list_files(directory, keyword):
