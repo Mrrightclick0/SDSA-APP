@@ -12,7 +12,6 @@ from unidecode import unidecode
 from scipy.spatial import ConvexHull
 import streamlit as st
 def app():
-    st.title("Match Report")
     # Print the modified DataFrame
     pd.set_option('display.max_columns', None)
     pd.set_option('display.max_rows', None)
