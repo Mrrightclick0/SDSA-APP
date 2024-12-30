@@ -1810,7 +1810,7 @@ def app():
                 # Display the cross statistics DataFrame in Streamlit
                 #st.dataframe(cross_stats_df)
 
-               def HighTO(ax):
+                def HighTO(ax):
                     pitch = Pitch(pitch_type='uefa', corner_arcs=True, pitch_color=bg_color, line_color=line_color, linewidth=2)
                     pitch.draw(ax=ax)
                     ax.set_ylim(-0.5,68.5)
