@@ -1375,7 +1375,7 @@ def app():
                 fig.text(0.9,0.1, '<------- Attacking Direction', color=acol, fontsize=25, ha='right', va='center')
                 dfs_to_merge = [shooting_stats_df, general_match_stats_df, pass_network_stats_df,defensive_block_stats_df, Progressvie_Passes_Stats_df, 
                                 Progressvie_Carries_Stats_df,goalkeeping_stats_df, final_third_entry_stats_df,zonal_passing_stats_df,
-                                chance_creating_stats_df, box_entry_stats_df, cross_stats_df, high_turnover_stats_df]
+                                chance_creating_stats_df, box_entry_stats_df, cross_stats_df]
 
                 # Initialize the main DataFrame
                 team_stats_df = shooting_stats_df
