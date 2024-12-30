@@ -1940,7 +1940,7 @@ def app():
                     ax.text(65, 4, f'Shot Ending High Turnovers: {ashot_count}', fontsize=8, color=acol, ha='center', va='center')
                     ax.text(65, 1, f'Goal Ending High Turnovers: {agoal_count}', fontsize=8, color="green", ha='center', va='center')
                     
-                    return []
+                    return 
 
                 # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
