@@ -1939,29 +1939,11 @@ def app():
                     ax.text(40, 63.5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=8, color="green", ha='center', va='center')
                     ax.text(65, 4, f'Shot Ending High Turnovers: {ashot_count}', fontsize=8, color=acol, ha='center', va='center')
                     ax.text(65, 1, f'Goal Ending High Turnovers: {agoal_count}', fontsize=8, color="green", ha='center', va='center')
-                
-                
-                    home_data = {
-                        'Team_Name': hteamName,
-                        'Total_High_Turnovers': hht_count,
-                        'Shot_Ending_High_Turnovers': hshot_count,
-                        'Goal_Ending_High_Turnovers': hgoal_count,
-                        'Opponent_Team_Name': ateamName
-                    }
                     
-                    away_data = {
-                        'Team_Name': ateamName,
-                        'Total_High_Turnovers': aht_count,
-                        'Shot_Ending_High_Turnovers': ashot_count,
-                        'Goal_Ending_High_Turnovers': agoal_count,
-                        'Opponent_Team_Name': hteamName
-                    }
-                    
-                    return [home_data, away_data]
+                    return []
 
                 # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-
                 # Generate visualization and statistics
                 HighTO(ax) 
                 st.header("High Turnover")
