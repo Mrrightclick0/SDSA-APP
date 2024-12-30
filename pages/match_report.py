@@ -1815,7 +1815,6 @@ def app():
                     pitch.draw(ax=ax)
                     ax.set_ylim(-0.5,68.5)
                     ax.set_xlim(-0.5,105.5)
-                
                     highTO = df.copy()
                     highTO['Distance'] = ((highTO['x'] - 105)**2 + (highTO['y'] - 34)**2)**0.5
                 
@@ -1871,12 +1870,6 @@ def app():
                                 ax.scatter(highTO.loc[i, 'x'],highTO.loc[i, 'y'], s=100, color='None', edgecolor=acol)
                                 aht_count += 1
                                 p_list.append(highTO.loc[i, 'shortName'])
-                
-                
-                
-                
-                
-                    
                     hgoal_count = 0
                     # Iterate through the DataFrame
                     for i in range(len(highTO)):
@@ -1970,7 +1963,7 @@ def app():
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
 
                 # Generate visualization and statistics
-                high_turnover_stats = HighTO(ax) 
+                HighTO(ax) 
                 st.header("High Turnover")
                 st.pyplot(fig)
                    
