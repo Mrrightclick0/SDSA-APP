@@ -1820,92 +1820,160 @@ def app():
                     highTO['Distance'] = ((highTO['x'] - 105)**2 + (highTO['y'] - 34)**2)**0.5
                 
                     agoal_count = 0
-                    required_columns = ['x', 'y', 'type', 'teamName', 'Distance', 'possession_id', 'shortName']
-                    if not all(col in highTO.columns for col in required_columns):
-                        missing_cols = ', '.join([col for col in required_columns if col not in highTO.columns])
-                        st.error(f"Missing required columns: {missing_cols}")
-                        return []
-                    hht_count, aht_count, hshot_count, ashot_count, hgoal_count, agoal_count = 0, 0, 0, 0, 0, 0
-
                     # Iterate through the DataFrame
-                    for i, row in highTO.iterrows():
-                        if row['type'] in ['BallRecovery', 'Interception'] and row['Distance'] <= 40:
-                            possession_id = row['possession_id']
-                            team_name = row['teamName']
-
-                            # Check if a goal is scored within the same possession
-                            subsequent_rows = highTO[(highTO['possession_id'] == possession_id) & (highTO['teamName'] == team_name)]
-                            goal_rows = subsequent_rows[subsequent_rows['type'] == 'Goal']
-
-                            if not goal_rows.empty:
-                                marker_color = 'green' if team_name == hteamName else acol
-                                ax.scatter(row['x'], row['y'], s=600, marker='*', color=marker_color, edgecolor='k', zorder=3)
-                                if team_name == hteamName:
-                                    hgoal_count += 1
-                                else:
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == ateamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            possession_id = highTO.loc[i, 'possession_id']
+                            
+                            # Check the following rows within the same possession
+                            j = i + 1
+                            while j < len(highTO) and highTO.loc[j, 'possession_id'] == possession_id and highTO.loc[j, 'teamName']==ateamName:
+                                if highTO.loc[j, 'type'] == 'Goal' and highTO.loc[j, 'teamName']==ateamName:
+                                    ax.scatter(highTO.loc[i, 'x'],highTO.loc[i, 'y'], s=600, marker='*', color='green', edgecolor='k', zorder=3)
+                                    # print(highTO.loc[i, 'type'])
                                     agoal_count += 1
-
-                            # Check for shots within the same possession
-                            shot_rows = subsequent_rows[subsequent_rows['type'].str.contains('Shot', na=False)]
-                            if not shot_rows.empty:
-                                marker_color = hcol if team_name == hteamName else acol
-                                ax.scatter(row['x'], row['y'], s=150, color=marker_color, edgecolor=bg_color, zorder=2)
-                                if team_name == hteamName:
-                                    hshot_count += 1
-                                else:
+                                    break
+                                j += 1
+                
+                    ashot_count = 0
+                    # Iterate through the DataFrame
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == ateamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            possession_id = highTO.loc[i, 'possession_id']
+                            
+                            # Check the following rows within the same possession
+                            j = i + 1
+                            while j < len(highTO) and highTO.loc[j, 'possession_id'] == possession_id and highTO.loc[j, 'teamName']==ateamName:
+                                if ('Shot' in highTO.loc[j, 'type']) and (highTO.loc[j, 'teamName']==ateamName):
+                                    ax.scatter(highTO.loc[i, 'x'],highTO.loc[i, 'y'], s=150, color=acol, edgecolor=bg_color, zorder=2)
                                     ashot_count += 1
-
-                            # Count turnovers
-                            if team_name == hteamName:
-                                hht_count += 1
-                            else:
+                                    break
+                                j += 1
+                    
+                    aht_count = 0
+                    p_list = []
+                    # Iterate through the DataFrame
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == ateamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            # Check the following rows
+                            j = i + 1
+                            if ((highTO.loc[j, 'teamName']==ateamName) and
+                                (highTO.loc[j, 'type']!='Dispossessed') and (highTO.loc[j, 'type']!='OffsidePass')):
+                                ax.scatter(highTO.loc[i, 'x'],highTO.loc[i, 'y'], s=100, color='None', edgecolor=acol)
                                 aht_count += 1
-
-                    # Plot the high turnover zones
-                    ax.add_artist(plt.Circle((0, 34), 40, color=hcol, fill=True, alpha=0.25, linestyle='dashed'))
-                    ax.add_artist(plt.Circle((105, 34), 40, color=acol, fill=True, alpha=0.25, linestyle='dashed'))
-
-                    # Add annotations
+                                p_list.append(highTO.loc[i, 'shortName'])
+                
+                
+                
+                
+                
+                    
+                    hgoal_count = 0
+                    # Iterate through the DataFrame
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == hteamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            possession_id = highTO.loc[i, 'possession_id']
+                            
+                            # Check the following rows within the same possession
+                            j = i + 1
+                            while j < len(highTO) and highTO.loc[j, 'possession_id'] == possession_id and highTO.loc[j, 'teamName']==hteamName:
+                                if highTO.loc[j, 'type'] == 'Goal' and highTO.loc[j, 'teamName']==hteamName:
+                                    ax.scatter(105-highTO.loc[i, 'x'],68-highTO.loc[i, 'y'], s=600, marker='*', color='green', edgecolor='k', zorder=3)
+                                    # print(highTO.loc[i, 'name'])
+                                    hgoal_count += 1
+                                    break
+                                j += 1
+                
+                    hshot_count = 0
+                    # Iterate through the DataFrame
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == hteamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            possession_id = highTO.loc[i, 'possession_id']
+                            
+                            # Check the following rows within the same possession
+                            j = i + 1
+                            while j < len(highTO) and highTO.loc[j, 'possession_id'] == possession_id and highTO.loc[j, 'teamName']==hteamName:
+                                if ('Shot' in highTO.loc[j, 'type']) and (highTO.loc[j, 'teamName']==hteamName):
+                                    ax.scatter(105-highTO.loc[i, 'x'],68-highTO.loc[i, 'y'], s=150, color=hcol, edgecolor=bg_color, zorder=2)
+                                    hshot_count += 1
+                                    break
+                                j += 1
+                    
+                    hht_count = 0
+                    p_list = []
+                    # Iterate through the DataFrame
+                    for i in range(len(highTO)):
+                        if ((highTO.loc[i, 'type'] in ['BallRecovery', 'Interception']) and 
+                            (highTO.loc[i, 'teamName'] == hteamName) and 
+                            (highTO.loc[i, 'Distance'] <= 40)):
+                            
+                            # Check the following rows
+                            j = i + 1
+                            if ((highTO.loc[j, 'teamName']==hteamName) and
+                                (highTO.loc[j, 'type']!='Dispossessed') and (highTO.loc[j, 'type']!='OffsidePass')):
+                                ax.scatter(105-highTO.loc[i, 'x'],68-highTO.loc[i, 'y'], s=100, color='None', edgecolor=hcol)
+                                hht_count += 1
+                                p_list.append(highTO.loc[i, 'shortName'])
+                
+                    # Plotting the half circle
+                    left_circle = plt.Circle((0,34), 40, color=hcol, fill=True, alpha=0.25, linestyle='dashed')
+                    ax.add_artist(left_circle)
+                    right_circle = plt.Circle((105,34), 40, color=acol, fill=True, alpha=0.25, linestyle='dashed')
+                    ax.add_artist(right_circle)
+                    # Set the aspect ratio to be equal
+                    ax.set_aspect('equal', adjustable='box')
+                    # Headlines and other texts
                     ax.text(0, 70, f"{hteamName}\nHigh Turnover: {hht_count}", color=hcol, size=25, ha='left', fontweight='bold')
                     ax.text(105, 70, f"{ateamName}\nHigh Turnover: {aht_count}", color=acol, size=25, ha='right', fontweight='bold')
-                    ax.text(0, -3, '<---Attacking Direction', color=hcol, fontsize=13, ha='left', va='center')
-                    ax.text(105, -3, 'Attacking Direction--->', color=acol, fontsize=13, ha='right', va='center')
+                    ax.text(0,  -3, '<---Attacking Direction', color=hcol, fontsize=13, ha='left', va='center')
+                    ax.text(105,-3, 'Attacking Direction--->', color=acol, fontsize=13, ha='right', va='center')
+                    ax.text(40, 66.5, f'Shot Ending High Turnovers: {hshot_count}', fontsize=8, color=hcol, ha='center', va='center')
+                    ax.text(40, 63.5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=8, color="green", ha='center', va='center')
                     ax.text(65, 4, f'Shot Ending High Turnovers: {ashot_count}', fontsize=8, color=acol, ha='center', va='center')
                     ax.text(65, 1, f'Goal Ending High Turnovers: {agoal_count}', fontsize=8, color="green", ha='center', va='center')
-
-                    # Prepare stats for DataFrame
+                
+                
                     home_data = {
                         'Team_Name': hteamName,
                         'Total_High_Turnovers': hht_count,
                         'Shot_Ending_High_Turnovers': hshot_count,
                         'Goal_Ending_High_Turnovers': hgoal_count,
-                        'Opponent_Team_Name': ateamName,
+                        'Opponent_Team_Name': ateamName
                     }
-
+                    
                     away_data = {
                         'Team_Name': ateamName,
                         'Total_High_Turnovers': aht_count,
                         'Shot_Ending_High_Turnovers': ashot_count,
                         'Goal_Ending_High_Turnovers': agoal_count,
-                        'Opponent_Team_Name': hteamName,
+                        'Opponent_Team_Name': hteamName
                     }
-
+                    
                     return [home_data, away_data]
 
                 # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
 
                 # Generate visualization and statistics
-                high_turnover_stats = HighTO(ax)
-
-                # Convert stats to DataFrame
-                if high_turnover_stats:
-                    high_turnover_stats_df = pd.DataFrame(high_turnover_stats)
-
-                    # Streamlit Outputs
-                    st.header("High Turnover")
-                    st.pyplot(fig)
-                    #st.dataframe(high_turnover_stats_df)
+                high_turnover_stats = HighTO(ax) 
+                st.header("High Turnover")
+                st.pyplot(fig)
+                   
 
 
                 #st.dataframe(high_turnover_stats_df)
