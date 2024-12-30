@@ -1184,21 +1184,28 @@ def app():
                     pitch.draw(ax=ax)
                     ax.set_xlim(-0.5, 105.5)
                     ax.set_ylim(-0.5, 68.5)
-
+                    dfpass = 0
+                    dfcarry = 0
+                
                     for index, row in bentry.iterrows():
                         if row['teamName'] == hteamName:
                             color = hcol
                             x, y, endX, endY = 105 - row['x'], 68 - row['y'], 105 - row['endX'], 68 - row['endY']
-                        else:
-                            continue  # Skip rows that don't match either team name
-                        if row['type'] == 'Pass':
-                            pitch.lines(x, y, endX, endY, lw=3.5, comet=True, color=color, ax=ax, alpha=0.5)
-                            pitch.scatter(endX, endY, s=35, edgecolor=color, linewidth=1, color=bg_color, zorder=2, ax=ax)
-                        elif row['type'] == 'Carry':
-                            arrow = patches.FancyArrowPatch((x, y), (endX, endY), arrowstyle='->', color=color, zorder=4, mutation_scale=20, 
-                                                            alpha=1, linewidth=2, linestyle='--')
-                            ax.add_patch(arrow)
-
+                            
+                            if row['type'] == 'Pass':
+                                # Draw pass line and scatter point
+                                pitch.lines(x, y, endX, endY, lw=0.5, comet=True, color=color, ax=ax, alpha=0.5)
+                                pitch.scatter(endX, endY, s=5, edgecolor=color, linewidth=0.5, color=bg_color, zorder=2, ax=ax)
+                                dfpass += 1  # Increment pass count
+                                
+                            elif row['type'] == 'Carry':
+                                # Draw carry arrow
+                                arrow = patches.FancyArrowPatch(
+                                    (x, y), (endX, endY), arrowstyle='->', color=color, zorder=4, 
+                                    mutation_scale=5, alpha=1, linewidth=0.5, linestyle='--'
+                                )
+                                ax.add_patch(arrow)
+                                dfcarry += 1  # Increment carry count
                     
                     ax.text(0, 69, f'{hteamName}\nBox Entries: {len(hbentry)}', color=hcol, fontsize=25, fontweight='bold', ha='left', va='bottom')
                     ax.scatter(46, 6, s=2000, marker='s', color=hcol, zorder=3)
@@ -1207,6 +1214,8 @@ def app():
                     ax.text(46, 6, f'{len(hleft)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(46, 34, f'{len(hcent)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(46, 62, f'{len(hrigt)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
+                    ax.text(63, -5, f'Entry by Pass: {dfpass}', fontsize=12, color=line_color, ha='center', va='center')
+                    ax.text(93, -5, f'Entry by Carry: {dfcarry}', fontsize=12, color=line_color, ha='center',va='center')
                     home_data = {
                         'Team_Name': hteamName,
                         'Total_Box_Entries': len(hbentry),
@@ -1336,6 +1345,8 @@ def app():
                     ax.text(105, 70, f"Aginst Teams \nHigh Turnover: {aht_count}", color=acol, size=25, ha='right', fontweight='bold')
                     ax.text(0, -3, '<---Attacking Direction', color=hcol, fontsize=13, ha='left', va='center')
                     ax.text(105, -3, 'Attacking Direction--->', color=acol, fontsize=13, ha='right', va='center')
+                    ax.text(55, -2, f'Shot Ending High Turnovers: {hshot_count}', fontsize=13, color=line_color, ha='center', va='center')
+                    ax.text(55, -5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=13, color="green", ha='center', va='center')
 
                     # Prepare stats for DataFrame
                     home_data = {
