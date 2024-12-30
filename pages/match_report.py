@@ -1796,20 +1796,10 @@ def app():
 
                 # Create a subplot for the Crosses visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-
-                # Generate the visualization and stats
                 cross_stats = Crosses(ax)
-
-                # Convert the cross statistics to a DataFrame
                 cross_stats_df = pd.DataFrame(cross_stats)
-
-                # Display the visualization in Streamlit
                 st.header("Crosses Statistics")
-
                 st.pyplot(fig)
-                # Display the cross statistics DataFrame in Streamlit
-                #st.dataframe(cross_stats_df)
-
                 def HighTO(ax):
                     pitch = Pitch(pitch_type='uefa', corner_arcs=True, pitch_color=bg_color, line_color=line_color, linewidth=2)
                     pitch.draw(ax=ax)
@@ -1942,18 +1932,10 @@ def app():
                     
                     return 
 
-                # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-                # Generate visualization and statistics
                 HighTO(ax) 
                 st.header("High Turnover")
                 st.pyplot(fig)
-                   
-
-
-                #st.dataframe(high_turnover_stats_df)
-
-
                 def plot_congestion(ax):
                     pcmap = LinearSegmentedColormap.from_list("Pearl Earring - 10 colors",  [acol, 'gray', hcol], N=20)
                     df1 = df[(df['teamName']==hteamName) & (df['isTouch']==1) & (~df['qualifiers'].str.contains('CornerTaken|Freekick|ThrowIn'))]
