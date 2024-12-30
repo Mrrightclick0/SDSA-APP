@@ -1687,6 +1687,21 @@ def app():
                     ax.text(93, -3, f'Entry by Carry: {(adfcarry)}', fontsize=12, color=acol, ha='center', va='center')
                     ax.text(10, -3, f'Entry by Pass: {(hdfpass)}', fontsize=12, color=hcol, ha='center', va='center')
                     ax.text(40, -3, f'Entry by Carry: {(hdfcarry)}', fontsize=12, color=hcol, ha='center', va='center')
+                     home_data = {
+                            'Team_Name': hteamName,
+                            'Total_Box_Entries': len(hbentry),
+                            'Box_Entry_From_Left': len(hleft),
+                            'Box_Entry_From_Center': len(hcent),
+                            'Box_Entry_From_Right': len(hrigt)
+                        }
+                    
+                        away_data = {
+                            'Team_Name': ateamName,
+                            'Total_Box_Entries': len(abentry),
+                            'Box_Entry_From_Left': len(aleft),
+                            'Box_Entry_From_Center': len(acent),
+                            'Box_Entry_From_Right': len(arigt)
+                        }
                     return [home_data, away_data]
 
 
