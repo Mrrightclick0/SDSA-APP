@@ -95,6 +95,13 @@ def app():
             # Load the selected files
             df = pd.read_csv(os.path.join(event_data_dir, selected_event_file))
             shots_df = pd.read_csv(os.path.join(shot_data_dir, selected_shot_file))
+            csv = df.to_csv(index=False)
+            st.download_button(
+                label="Download Event Data as CSV",
+                data=csv,
+                file_name=f"{selected_match}_EventsData.csv",
+                mime="text/csv",
+            )
 
             # Remove rows with missing names or team names
             df = df.dropna(subset=['name', 'teamName'])
@@ -1617,59 +1624,69 @@ def app():
                     pitch.draw(ax=ax)
                     ax.set_xlim(-0.5, 105.5)
                     ax.set_ylim(-0.5, 68.5)
-
+                    hdfpass = 0
+                    hdfcarry = 0
+                    adfpass = 0
+                    adfcarry = 0
+                    for index, row in bentry.iterrows():
+                        if row['teamName'] == hteamName:
+                            color = hcol
+                            x, y, endX, endY = 105 - row['x'], 68 - row['y'], 105 - row['endX'], 68 - row['endY']
+                            
+                            if row['type'] == 'Pass':
+                                # Draw pass line and scatter point
+                                pitch.lines(x, y, endX, endY, lw=0.5, comet=True, color=color, ax=ax, alpha=0.5)
+                                pitch.scatter(endX, endY, s=5, edgecolor=color, linewidth=0.5, color=bg_color, zorder=2, ax=ax)
+                                hdfpass += 1  # Increment pass count
+                                
+                            elif row['type'] == 'Carry':
+                                # Draw carry arrow
+                                arrow = patches.FancyArrowPatch(
+                                    (x, y), (endX, endY), arrowstyle='->', color=color, zorder=4, 
+                                    mutation_scale=5, alpha=1, linewidth=0.5, linestyle='--'
+                                )
+                                ax.add_patch(arrow)
+                                hdfcarry += 1  # Increment carry count
                     for index, row in bentry.iterrows():
                         if row['teamName'] == ateamName:
                             color = acol
                             x, y, endX, endY = row['x'], row['y'], row['endX'], row['endY']
-                        elif row['teamName'] == hteamName:
-                            color = hcol
-                            x, y, endX, endY = 105 - row['x'], 68 - row['y'], 105 - row['endX'], 68 - row['endY']
-                        else:
-                            continue  # Skip rows that don't match either team name
-
-                        if row['type'] == 'Pass':
-                            pitch.lines(x, y, endX, endY, lw=3.5, comet=True, color=color, ax=ax, alpha=0.5)
-                            pitch.scatter(endX, endY, s=35, edgecolor=color, linewidth=1, color=bg_color, zorder=2, ax=ax)
-                        elif row['type'] == 'Carry':
-                            arrow = patches.FancyArrowPatch((x, y), (endX, endY), arrowstyle='->', color=color, zorder=4, mutation_scale=20, 
-                                                            alpha=1, linewidth=2, linestyle='--')
-                            ax.add_patch(arrow)
-
+                            
+                            if row['type'] == 'Pass':
+                                # Draw pass line and scatter point
+                                pitch.lines(x, y, endX, endY, lw=0.5, comet=True, color=color, ax=ax, alpha=0.5)
+                                pitch.scatter(endX, endY, s=5, edgecolor=color, linewidth=0.5, color=bg_color, zorder=2, ax=ax)
+                                adfpass += 1  # Increment pass count
+                                
+                            elif row['type'] == 'Carry':
+                                # Draw carry arrow
+                                arrow = patches.FancyArrowPatch(
+                                    (x, y), (endX, endY), arrowstyle='->', color=color, zorder=4, 
+                                    mutation_scale=5, alpha=1, linewidth=0.5, linestyle='--'
+                                )
+                                ax.add_patch(arrow)
+                                adfcarry += 1  # Increment carry count
                     
                     ax.text(0, 69, f'{hteamName}\nBox Entries: {len(hbentry)}', color=hcol, fontsize=25, fontweight='bold', ha='left', va='bottom')
                     ax.text(105, 69, f'{ateamName}\nBox Entries: {len(abentry)}', color=acol, fontsize=25, fontweight='bold', ha='right', va='bottom')
-
+                    
                     ax.scatter(46, 6, s=2000, marker='s', color=hcol, zorder=3)
                     ax.scatter(46, 34, s=2000, marker='s', color=hcol, zorder=3)
                     ax.scatter(46, 62, s=2000, marker='s', color=hcol, zorder=3)
                     ax.text(46, 6, f'{len(hleft)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(46, 34, f'{len(hcent)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(46, 62, f'{len(hrigt)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
-
+                    
                     ax.scatter(59.5, 6, s=2000, marker='s', color=acol, zorder=3)
                     ax.scatter(59.5, 34, s=2000, marker='s', color=acol, zorder=3)
                     ax.scatter(59.5, 62, s=2000, marker='s', color=acol, zorder=3)
                     ax.text(59.5, 6, f'{len(arigt)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(59.5, 34, f'{len(acent)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
                     ax.text(59.5, 62, f'{len(aleft)}', fontsize=30, fontweight='bold', color=bg_color, ha='center', va='center')
-
-                    home_data = {
-                        'Team_Name': hteamName,
-                        'Total_Box_Entries': len(hbentry),
-                        'Box_Entry_From_Left': len(hleft),
-                        'Box_Entry_From_Center': len(hcent),
-                        'Box_Entry_From_Right': len(hrigt)
-                    }
-                    
-                    away_data = {
-                        'Team_Name': ateamName,
-                        'Total_Box_Entries': len(abentry),
-                        'Box_Entry_From_Left': len(aleft),
-                        'Box_Entry_From_Center': len(acent),
-                        'Box_Entry_From_Right': len(arigt)
-                    }
-                    
+                    ax.text(63, -3, f'Entry by Pass: {(adfpass)}', fontsize=12, color=acol, ha='center', va='center')
+                    ax.text(93, -3, f'Entry by Carry: {(adfcarry)}', fontsize=12, color=acol, ha='center', va='center')
+                    ax.text(10, -3, f'Entry by Pass: {(hdfpass)}', fontsize=12, color=hcol, ha='center', va='center')
+                    ax.text(40, -3, f'Entry by Carry: {(hdfcarry)}', fontsize=12, color=hcol, ha='center', va='center')
                     return [home_data, away_data]
 
 
@@ -1842,6 +1859,8 @@ def app():
                     ax.text(105, 70, f"{ateamName}\nHigh Turnover: {aht_count}", color=acol, size=25, ha='right', fontweight='bold')
                     ax.text(0, -3, '<---Attacking Direction', color=hcol, fontsize=13, ha='left', va='center')
                     ax.text(105, -3, 'Attacking Direction--->', color=acol, fontsize=13, ha='right', va='center')
+                    ax.text(55, -2, f'Shot Ending High Turnovers: {hshot_count}', fontsize=13, color=line_color, ha='center', va='center')
+                    ax.text(55, -5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=13, color="green", ha='center', va='center')
 
                     # Prepare stats for DataFrame
                     home_data = {
