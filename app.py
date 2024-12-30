@@ -3,17 +3,21 @@ import streamlit as st
 # Welcome page
 st.set_page_config(layout="wide", page_title="Football Analysis Dashboard", page_icon="⚽")
 st.title("Welcome to the SDSA Football Analysis Dashboard")
+
+# Display the logo
 logo_path = "assets/logo.png"
-st.image(logo_path, use_container_width =True)
-# Navigation
+st.image(logo_path, use_container_width=True)
+
+# Sidebar for navigation
 st.sidebar.title("Navigation")
 page = st.sidebar.radio(
     "Go to",
     ["Welcome", "Match Report", "Team Report", "Player in Match", "Player Report", "Stat Finder"]
 )
 
+# Main content based on the selected page
 if page == "Welcome":
-    st.write("Select a page from the sidebar.")
+    st.write("Select a page from the sidebar to get started.")
 elif page == "Match Report":
     # Dynamically load the match report module
     from pages.match_report import app as match_report_app
@@ -30,3 +34,7 @@ elif page == "Player Report":
 elif page == "Stat Finder":
     from pages.stat_finder import app as stat_finder_app
     stat_finder_app()
+
+# Use `st.empty()` to ensure no unnecessary items are shown in the main area
+else:
+    st.empty()
