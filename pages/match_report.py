@@ -1695,7 +1695,7 @@ def app():
                             'Box_Entry_From_Right': len(hrigt)
                         }
                     
-                        away_data = {
+                    away_data = {
                             'Team_Name': ateamName,
                             'Total_Box_Entries': len(abentry),
                             'Box_Entry_From_Left': len(aleft),
