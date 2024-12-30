@@ -1881,20 +1881,9 @@ def app():
                 
                 # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-                
-
-
-                # Generate visualization and statistics
-                high_turnover_stats = HighTO(ax)
-
-                # Convert stats to DataFrame
-                if high_turnover_stats:
-                    high_turnover_stats_df = pd.DataFrame(high_turnover_stats)
-
-                    # Streamlit Outputs
-                    st.header("High Turnover")
-                    st.pyplot(fig)
-                    #st.dataframe(high_turnover_stats_df)
+                HighTO(ax)
+                st.header("High Turnover")
+                st.pyplot(fig)
 
 
                 def plot_congestion(ax):
