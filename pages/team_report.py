@@ -1282,101 +1282,89 @@ def app():
 
                 st.pyplot(fig)
                 def HighTO(ax):
-                    # Draw the pitch
                     pitch = Pitch(pitch_type='uefa', corner_arcs=True, pitch_color=bg_color, line_color=line_color, linewidth=2)
                     pitch.draw(ax=ax)
                     ax.set_ylim(-0.5, 68.5)
                     ax.set_xlim(-0.5, 105.5)
-
+                
                     # Create a copy of df and calculate the Distance column
                     highTO = df.copy()
                     highTO['Distance'] = ((highTO['x'] - 105)**2 + (highTO['y'] - 34)**2)**0.5
-
-                    # Validate required columns in the modified DataFrame
+                
+                    # Validate required columns
                     required_columns = ['x', 'y', 'type', 'teamName', 'Distance', 'possession_id', 'shortName']
                     if not all(col in highTO.columns for col in required_columns):
-                        missing_cols = ', '.join([col for col in required_columns if col not in highTO.columns])
-                        st.error(f"Missing required columns: {missing_cols}")
-                        return []
-
-                    # Initialize counters and data containers
+                        st.error(f"Missing required columns: {[col for col in required_columns if col not in highTO.columns]}")
+                        return
+                
+                    # Initialize counters
                     hht_count, aht_count, hshot_count, ashot_count, hgoal_count, agoal_count = 0, 0, 0, 0, 0, 0
-
-                    # Iterate through rows using iterrows for safety
+                
+                    # Process each row in the DataFrame
                     for i, row in highTO.iterrows():
                         if row['type'] in ['BallRecovery', 'Interception'] and row['Distance'] <= 40:
                             possession_id = row['possession_id']
                             team_name = row['teamName']
-
-                            # Check if a goal is scored within the same possession
-                            subsequent_rows = highTO[(highTO['possession_id'] == possession_id) & (highTO['teamName'] == team_name)]
+                
+                            # Get rows for the same possession and team
+                            subsequent_rows = highTO[
+                                (highTO['possession_id'] == possession_id) & (highTO['teamName'] == team_name)
+                            ]
                             goal_rows = subsequent_rows[subsequent_rows['type'] == 'Goal']
-
+                            shot_rows = subsequent_rows[subsequent_rows['type'].str.contains('Shot', na=False)]
+                
+                            # Coordinates transformation
+                            x_coord = row['x'] if team_name == hteamName else 105 - row['x']
+                            y_coord = row['y'] if team_name == hteamName else 68 - row['y']
+                
+                            # Scatter the high turnover point
+                            turnover_marker_color = hcol if team_name == hteamName else acol
+                            ax.scatter(x_coord, y_coord, s=100, color='None', edgecolor=turnover_marker_color, zorder=1)
+                
+                            # Check for goals
                             if not goal_rows.empty:
-                                marker_color = 'green' if team_name == hteamName else acol
-                                ax.scatter(row['x'], row['y'], s=600, marker='*', color=marker_color, edgecolor='k', zorder=3)
+                                ax.scatter(x_coord, y_coord, s=600, marker='*', color='green', edgecolor='k', zorder=3)
                                 if team_name == hteamName:
                                     hgoal_count += 1
                                 else:
                                     agoal_count += 1
-
-                            # Check for shots within the same possession
-                            shot_rows = subsequent_rows[subsequent_rows['type'].str.contains('Shot', na=False)]
+                
+                            # Check for shots
                             if not shot_rows.empty:
                                 marker_color = hcol if team_name == hteamName else acol
-                                ax.scatter(row['x'], row['y'], s=150, color=marker_color, edgecolor=bg_color, zorder=2)
+                                ax.scatter(x_coord, y_coord, s=150, color=marker_color, edgecolor=bg_color, zorder=2)
                                 if team_name == hteamName:
                                     hshot_count += 1
                                 else:
                                     ashot_count += 1
-
-                            # Count turnovers
+                
+                            # Count high turnovers
                             if team_name == hteamName:
                                 hht_count += 1
                             else:
                                 aht_count += 1
-
-                    # Plot the high turnover zones
+                
+                    # Plot high turnover zones
                     ax.add_artist(plt.Circle((0, 34), 40, color=hcol, fill=True, alpha=0.25, linestyle='dashed'))
                     ax.add_artist(plt.Circle((105, 34), 40, color=acol, fill=True, alpha=0.25, linestyle='dashed'))
-
+                
                     # Add annotations
                     ax.text(0, 70, f"{hteamName}\nHigh Turnover: {hht_count}", color=hcol, size=25, ha='left', fontweight='bold')
                     ax.text(105, 70, f"Aginst Teams \nHigh Turnover: {aht_count}", color=acol, size=25, ha='right', fontweight='bold')
                     ax.text(0, -3, '<---Attacking Direction', color=hcol, fontsize=13, ha='left', va='center')
                     ax.text(105, -3, 'Attacking Direction--->', color=acol, fontsize=13, ha='right', va='center')
-                    ax.text(55, -2, f'Shot Ending High Turnovers: {hshot_count}', fontsize=13, color=line_color, ha='center', va='center')
-                    ax.text(55, -5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=13, color="green", ha='center', va='center')
-
-                    # Prepare stats for DataFrame
-                    home_data = {
-                        'Team_Name': hteamName,
-                        'Total_High_Turnovers': hht_count,
-                        'Shot_Ending_High_Turnovers': hshot_count,
-                        'Goal_Ending_High_Turnovers': hgoal_count,
-                    }
-
-                    away_data = {
-                        'Total_High_Turnovers': aht_count,
-                        'Shot_Ending_High_Turnovers': ashot_count,
-                        'Goal_Ending_High_Turnovers': agoal_count,
-                        'Opponent_Team_Name': hteamName,
-                    }
-
-                    return [home_data, away_data]
+                    ax.text(40, 66.5, f'Shot Ending High Turnovers: {hshot_count}', fontsize=8, color=hcol, ha='center', va='center')
+                    ax.text(40, 63.5, f'Goal Ending High Turnovers: {hgoal_count}', fontsize=8, color="green", ha='center', va='center')
+                    ax.text(65, 4, f'Shot Ending High Turnovers: {ashot_count}', fontsize=8, color=acol, ha='center', va='center')
+                    ax.text(65, 1, f'Goal Ending High Turnovers: {agoal_count}', fontsize=8, color="green", ha='center', va='center')
+                    return
+                
+                
+                # Create a subplot for visualization
                 fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-
-                # Generate visualization and statistics
-                high_turnover_stats = HighTO(ax)
-
-                # Convert stats to DataFrame
-                if high_turnover_stats:
-                    high_turnover_stats_df = pd.DataFrame(high_turnover_stats)
-
-                    # Streamlit Outputs
-                    st.header("High Turnover")
-                    st.pyplot(fig)
-                    #st.dataframe(high_turnover_stats_df)
+                HighTO(ax)
+                st.header("High Turnover")
+                st.pyplot(fig)
 
 
                 general_match_stats = plotting_match_stats(ax)
