@@ -15,26 +15,31 @@ page = st.sidebar.radio(
     ["Welcome", "Match Report", "Team Report", "Player in Match", "Player Report", "Stat Finder"]
 )
 
-# Main content based on the selected page
 if page == "Welcome":
-    st.write("Select a page from the sidebar to get started.")
-elif page == "Match Report":
-    # Dynamically load the match report module
-    from pages.match_report import app as match_report_app
-    match_report_app()
-elif page == "Team Report":
-    from pages.team_report import app as team_report_app
-    team_report_app()
-elif page == "Player in Match":
-    from pages.player_in_match import app as player_in_match_app
-    player_in_match_app()
-elif page == "Player Report":
-    from pages.player_report import app as player_report_app
-    player_report_app()
-elif page == "Stat Finder":
-    from pages.stat_finder import app as stat_finder_app
-    stat_finder_app()
+    st.write("Select a page from the sidebar.")
 
-# Use `st.empty()` to ensure no unnecessary items are shown in the main area
-else:
-    st.empty()
+elif page == "Match Report":
+    with st.expander("Match Report Details", expanded=True):
+        # Dynamically load the match report module
+        from pages.match_report import app as match_report_app
+        match_report_app()
+
+elif page == "Team Report":
+    with st.expander("Team Report Details", expanded=True):
+        from pages.team_report import app as team_report_app
+        team_report_app()
+
+elif page == "Player in Match":
+    with st.expander("Player in Match Details", expanded=True):
+        from pages.player_in_match import app as player_in_match_app
+        player_in_match_app()
+
+elif page == "Player Report":
+    with st.expander("Player Report Details", expanded=True):
+        from pages.player_report import app as player_report_app
+        player_report_app()
+
+elif page == "Stat Finder":
+    with st.expander("Stat Finder Details", expanded=True):
+        from pages.stat_finder import app as stat_finder_app
+        stat_finder_app()
