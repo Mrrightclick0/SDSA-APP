@@ -21,7 +21,7 @@ def app():
     red = '#ff4b44'
     blue = '#00a0de'
     violet = '#a369ff'
-    bg_color= '#f5f5f5'
+    bg_color= '#ffffff'
     line_color= '#000000'
     #bg_color= '#000000'
     #line_color= '#ffffff'
