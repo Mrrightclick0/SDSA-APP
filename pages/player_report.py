@@ -602,70 +602,71 @@ def app():
                     shooting_stats_title = [62, 62-(1*7), 62-(2*7), 62-(3*7), 62-(4*7), 62-(5*7), 62-(6*7), 62-(7*7), 62-(8*7)]
                     shooting_stats_home = [hgoal_count, hxg, hxgot, hTotalShots, hShotsOnT, hxGpSh, total_bigC_home, bigC_miss_home, home_average_shot_distance]
                         # normalizing the stats
-                    shooting_stats_normalized_home = [(hgoal/(hgoal))*20, (hxg/(hxg))*20, (hxgot_n/(hxgot_n))*20,
-                                                        (hTotalShots/(hTotalShots))*20, (hShotsOnT_n/(hShotsOnT_n))*20,
-                                                        (total_bigC_home_n/(total_bigC_home_n))*20, (bigC_miss_home_n/(bigC_miss_home_n))*20,
-                                                        (hxGpSh/(hxGpSh))*20, 
-                                                        (home_average_shot_distance/(home_average_shot_distance))*20]
-                        
-                        # definig the start point
-                    start_x = 42.5
-                    start_x_for_away = [x + 42.5 for x in shooting_stats_normalized_home]
-                    ax.barh(shooting_stats_title, shooting_stats_normalized_home, height=5, color=hcol, left=start_x)
-                        # Turn off axis-related elements
-                    ax.spines['top'].set_visible(False)
-                    ax.spines['right'].set_visible(False)
-                    ax.spines['bottom'].set_visible(False)
-                    ax.spines['left'].set_visible(False)
-                    ax.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False)
-                    ax.set_xticks([])
-                    ax.set_yticks([])
-                        # plotting the texts
-                    ax.text(52.5, 62, "Goals", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(1*7), "xG", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(2*7), "xGOT", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(3*7), "Shots", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(4*7), "On Target", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(5*7), "BigChance", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(6*7), "BigC.Miss", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(7*7), "xG/Shot", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-                    ax.text(52.5, 62-(8*7), "Avg.Dist.", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
-
-                    ax.text(41.5, 62, f"{hgoal_count}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(1*7), f"{hxg}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(2*7), f"{hxgot}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(3*7), f"{hTotalShots}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(4*7), f"{hShotsOnT}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(5*7), f"{total_bigC_home}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(6*7), f"{bigC_miss_home}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(7*7), f"{hxGpSh}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-                    ax.text(41.5, 62-(8*7), f"{home_average_shot_distance}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
-
-                        # Heading and other texts
-                    ax.text(0, 70, f"{selected_player}\n<---shots", color=hcol, size=25, ha='left', fontweight='bold')
-                    home_data = {
-                            'Team_Name': hteamName,
-                            'Goals_Scored': hgoal_count,
-                            'xG': hxg,
-                            'xGOT': hxgot,
-                            'Total_Shots': hTotalShots,
-                            'Shots_On_Target': hShotsOnT,
-                            'BigChances': total_bigC_home,
-                            'BigChances_Missed': bigC_miss_home,
-                            'xG_per_Shot': hxGpSh,
-                            'Average_Shot_Distance': home_average_shot_distance
-                        }
-                        
-                        
-                    return [home_data]
-
-                fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-
-                    # Call the `plot_shotmap` function
-                shooting_stats = plot_shotmap(ax)
-
-                    # Convert the shooting stats to a DataFrame
-                shooting_stats_df = pd.DataFrame(shooting_stats)
+                    if hTotalShots > 0 :
+                        shooting_stats_normalized_home = [(hgoal/(hgoal))*20, (hxg/(hxg))*20, (hxgot_n/(hxgot_n))*20,
+                                                            (hTotalShots/(hTotalShots))*20, (hShotsOnT_n/(hShotsOnT_n))*20,
+                                                            (total_bigC_home_n/(total_bigC_home_n))*20, (bigC_miss_home_n/(bigC_miss_home_n))*20,
+                                                            (hxGpSh/(hxGpSh))*20, 
+                                                            (home_average_shot_distance/(home_average_shot_distance))*20]
+                            
+                            # definig the start point
+                        start_x = 42.5
+                        start_x_for_away = [x + 42.5 for x in shooting_stats_normalized_home]
+                        ax.barh(shooting_stats_title, shooting_stats_normalized_home, height=5, color=hcol, left=start_x)
+                            # Turn off axis-related elements
+                        ax.spines['top'].set_visible(False)
+                        ax.spines['right'].set_visible(False)
+                        ax.spines['bottom'].set_visible(False)
+                        ax.spines['left'].set_visible(False)
+                        ax.tick_params(axis='both', which='both', bottom=False, top=False, left=False, right=False)
+                        ax.set_xticks([])
+                        ax.set_yticks([])
+                            # plotting the texts
+                        ax.text(52.5, 62, "Goals", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(1*7), "xG", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(2*7), "xGOT", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(3*7), "Shots", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(4*7), "On Target", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(5*7), "BigChance", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(6*7), "BigC.Miss", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(7*7), "xG/Shot", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+                        ax.text(52.5, 62-(8*7), "Avg.Dist.", color=bg_color, fontsize=18, ha='center', va='center', fontweight='bold')
+    
+                        ax.text(41.5, 62, f"{hgoal_count}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(1*7), f"{hxg}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(2*7), f"{hxgot}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(3*7), f"{hTotalShots}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(4*7), f"{hShotsOnT}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(5*7), f"{total_bigC_home}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(6*7), f"{bigC_miss_home}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(7*7), f"{hxGpSh}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+                        ax.text(41.5, 62-(8*7), f"{home_average_shot_distance}", color=line_color, fontsize=18, ha='right', va='center', fontweight='bold')
+    
+                            # Heading and other texts
+                        ax.text(0, 70, f"{selected_player}\n<---shots", color=hcol, size=25, ha='left', fontweight='bold')
+                        home_data = {
+                                'Team_Name': hteamName,
+                                'Goals_Scored': hgoal_count,
+                                'xG': hxg,
+                                'xGOT': hxgot,
+                                'Total_Shots': hTotalShots,
+                                'Shots_On_Target': hShotsOnT,
+                                'BigChances': total_bigC_home,
+                                'BigChances_Missed': bigC_miss_home,
+                                'xG_per_Shot': hxGpSh,
+                                'Average_Shot_Distance': home_average_shot_distance
+                            }
+                            
+                            
+                        return [home_data]
+    
+                    fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
+    
+                        # Call the `plot_shotmap` function
+                    shooting_stats = plot_shotmap(ax)
+    
+                        # Convert the shooting stats to a DataFrame
+                    shooting_stats_df = pd.DataFrame(shooting_stats)
 
                     # Display the visualization in Streamlit
                 st.header("Shooting Statistics")
