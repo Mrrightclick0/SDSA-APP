@@ -439,14 +439,14 @@ def app():
                             'Progressive_Passes_From_Right': right_pro
                         }
 
-                    fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
-                    Progressvie_Passes_Stats_home = draw_progressive_pass_map(axs, hteamName, hcol)
-                    Progressvie_Passes_Stats_list = []
-                    Progressvie_Passes_Stats_list.append(Progressvie_Passes_Stats_home)
-                    Progressvie_Passes_Stats_df = pd.DataFrame(Progressvie_Passes_Stats_list)
-                    # Display the visualization
-                    st.header("Progressive Passes")
-                    st.pyplot(fig)
+                fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
+                Progressvie_Passes_Stats_home = draw_progressive_pass_map(axs, hteamName, hcol)
+                Progressvie_Passes_Stats_list = []
+                Progressvie_Passes_Stats_list.append(Progressvie_Passes_Stats_home)
+                Progressvie_Passes_Stats_df = pd.DataFrame(Progressvie_Passes_Stats_list)
+                # Display the visualization
+                st.header("Progressive Passes")
+                st.pyplot(fig)
 
                 def draw_progressive_carry_map(ax, team_name, col):
                     dfpro = df[(df['teamName']==team_name) & (df['prog_carry']>=9.11) & (df['endX']>=35)]
@@ -502,14 +502,14 @@ def app():
                             'Progressive_Carries_From_Right': right_pro
                         }
 
-                    fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
-                    Progressvie_Carries_Stats_home = draw_progressive_carry_map(axs, hteamName, hcol)
-                    Progressvie_Carries_Stats_list = []
-                    Progressvie_Carries_Stats_list.append(Progressvie_Carries_Stats_home)
-                    Progressvie_Carries_Stats_df = pd.DataFrame(Progressvie_Carries_Stats_list)
-                    # Display the visualization
-                    st.header("Progressive Carries")
-                    st.pyplot(fig)
+                fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
+                Progressvie_Carries_Stats_home = draw_progressive_carry_map(axs, hteamName, hcol)
+                Progressvie_Carries_Stats_list = []
+                Progressvie_Carries_Stats_list.append(Progressvie_Carries_Stats_home)
+                Progressvie_Carries_Stats_df = pd.DataFrame(Progressvie_Carries_Stats_list)
+                # Display the visualization
+                st.header("Progressive Carries")
+                st.pyplot(fig)
                 # filtering the shots only
                 mask4 = (df['type'] == 'Goal') | (df['type'] == 'MissedShots') | (df['type'] == 'SavedShot') | (df['type'] == 'ShotOnPost')
                 Shotsdf = df[mask4]
@@ -659,17 +659,17 @@ def app():
                             
                         return [home_data]
     
-                    fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
-    
-                        # Call the `plot_shotmap` function
-                    shooting_stats = plot_shotmap(ax)
-    
-                        # Convert the shooting stats to a DataFrame
-                    shooting_stats_df = pd.DataFrame(shooting_stats)
+                fig, ax = plt.subplots(figsize=(10, 10), facecolor=bg_color)
 
-                    # Display the visualization in Streamlit
-                    st.header("Shooting Statistics")
-                    st.pyplot(fig)
+                    # Call the `plot_shotmap` function
+                shooting_stats = plot_shotmap(ax)
+
+                    # Convert the shooting stats to a DataFrame
+                shooting_stats_df = pd.DataFrame(shooting_stats)
+
+                # Display the visualization in Streamlit
+                st.header("Shooting Statistics")
+                st.pyplot(fig)
                 def plot_goalPost(ax):
                         hShotsdf = Shotsdf[Shotsdf['teamName']==hteamName]
                         aShotsdf = Shotsdf[Shotsdf['oppositionTeamName']== hteamName]
@@ -826,13 +826,13 @@ def app():
                             'Entry_By_Carry': len(dfcarry)
                         }
 
-                    fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
-                    final_third_entry_stats_home = Final_third_entry(axs, hteamName, hcol)
-                    final_third_entry_stats_list = []
-                    final_third_entry_stats_list.append(final_third_entry_stats_home)
-                    final_third_entry_stats_df = pd.DataFrame(final_third_entry_stats_list)
-                    st.header("Final Third Entry")
-                    st.pyplot(fig) 
+                fig,axs=plt.subplots(figsize=(20,10), facecolor=bg_color)
+                final_third_entry_stats_home = Final_third_entry(axs, hteamName, hcol)
+                final_third_entry_stats_list = []
+                final_third_entry_stats_list.append(final_third_entry_stats_home)
+                final_third_entry_stats_df = pd.DataFrame(final_third_entry_stats_list)
+                st.header("Final Third Entry")
+                st.pyplot(fig) 
                 def zone14hs(ax, team_name, col):
                     dfhp = df[(df['teamName']==team_name) & (df['type']=='Pass') & (df['outcomeType']=='Successful') & 
                             (~df['qualifiers'].str.contains('CornerTaken|Freekick'))]
