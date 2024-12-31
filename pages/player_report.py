@@ -772,7 +772,7 @@ def app():
                     # ax.set_ylim(-0.5, 68.5)
 
                     pass_count = len(dfpass) + len(dfcarry)
-                    if dfpass > 0:
+                    if pass_count > 0:
 
                         # calculating the counts
                         left_entry = len(dfpass[dfpass['y']>=45.33]) + len(dfcarry[dfcarry['y']>=45.33])
