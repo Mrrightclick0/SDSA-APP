@@ -669,8 +669,8 @@ def app():
                     shooting_stats_df = pd.DataFrame(shooting_stats)
 
                     # Display the visualization in Streamlit
-                st.header("Shooting Statistics")
-                st.pyplot(fig)
+                    st.header("Shooting Statistics")
+                    st.pyplot(fig)
                 def plot_goalPost(ax):
                         hShotsdf = Shotsdf[Shotsdf['teamName']==hteamName]
                         aShotsdf = Shotsdf[Shotsdf['oppositionTeamName']== hteamName]
